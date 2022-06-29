@@ -10,6 +10,7 @@ class PagingState<PageKeyType, ItemType> {
     this.nextPageKey,
     this.itemList,
     this.error,
+    this.disabled = false,
   });
 
   /// List with all items loaded so far.
@@ -20,6 +21,9 @@ class PagingState<PageKeyType, ItemType> {
 
   /// The key for the next page to be fetched.
   final PageKeyType? nextPageKey;
+
+  /// When refresh need disabled load more.
+  final bool disabled;
 
   /// The current pagination status.
   PagingStatus get status {
@@ -49,7 +53,8 @@ class PagingState<PageKeyType, ItemType> {
   @override
   String toString() =>
       '${objectRuntimeType(this, 'PagingState')}(itemList: \u2524'
-      '$itemList\u251C, error: $error, nextPageKey: $nextPageKey)';
+      '$itemList\u251C, error: $error, nextPageKey: $nextPageKey, '
+      'disabled: $disabled)';
 
   @override
   bool operator ==(Object other) {
@@ -59,7 +64,8 @@ class PagingState<PageKeyType, ItemType> {
     return other is PagingState &&
         other.itemList == itemList &&
         other.error == error &&
-        other.nextPageKey == nextPageKey;
+        other.nextPageKey == nextPageKey &&
+        other.disabled == disabled;
   }
 
   @override
@@ -67,6 +73,7 @@ class PagingState<PageKeyType, ItemType> {
         itemList.hashCode,
         error.hashCode,
         nextPageKey.hashCode,
+        disabled.hashCode,
       );
 
   int? get _itemCount => itemList?.length;

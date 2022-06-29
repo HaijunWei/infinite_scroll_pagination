@@ -70,6 +70,7 @@ class PagingController<PageKeyType, ItemType>
       error: newError,
       itemList: itemList,
       nextPageKey: nextPageKey,
+      disabled: false,
     );
   }
 
@@ -106,6 +107,7 @@ class PagingController<PageKeyType, ItemType>
       itemList: itemList,
       error: null,
       nextPageKey: nextPageKey,
+      disabled: false,
     );
   }
 
@@ -113,17 +115,29 @@ class PagingController<PageKeyType, ItemType>
   /// key to `null`.
   void appendLastPage(List<ItemType> newItems) => appendPage(newItems, null);
 
+  ///
+  void appendFirstPage(List<ItemType> newItems, PageKeyType? nextPageKey) {
+    value = PagingState<PageKeyType, ItemType>(
+      itemList: newItems,
+      error: null,
+      nextPageKey: nextPageKey,
+      disabled: false,
+    );
+  }
+
   /// Erases the current error.
   void retryLastFailedRequest() {
     error = null;
   }
 
   /// Resets [value] to its initial state.
-  void refresh() {
+  void refresh({bool keepHistory = true}) {
+    final oldItemList = value.itemList;
     value = PagingState<PageKeyType, ItemType>(
       nextPageKey: firstPageKey,
       error: null,
-      itemList: null,
+      itemList: keepHistory ? oldItemList : null,
+      disabled: true,
     );
   }
 
@@ -201,6 +215,10 @@ class PagingController<PageKeyType, ItemType>
   /// will not change which listeners are called during this iteration.
   void notifyPageRequestListeners(PageKeyType pageKey) {
     assert(_debugAssertNotDisposed());
+
+    if (value.disabled) {
+      return;
+    }
 
     if (_pageRequestListeners!.isEmpty) {
       return;

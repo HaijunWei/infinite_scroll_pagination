@@ -158,6 +158,7 @@ class _PagedSliverBuilderState<PageKeyType, ItemType>
           builder: (context, pagingState, _) {
             Widget child;
             final itemList = _pagingController.itemList;
+            final disabled = _pagingController.value.disabled;
             switch (pagingState.status) {
               case PagingStatus.ongoing:
                 child = widget.loadingListingBuilder(
@@ -172,7 +173,9 @@ class _PagedSliverBuilderState<PageKeyType, ItemType>
                     itemList!,
                   ),
                   _itemCount,
-                  _newPageProgressIndicatorBuilder,
+                  disabled
+                      ? (context) => const SizedBox()
+                      : _newPageProgressIndicatorBuilder,
                 );
                 break;
               case PagingStatus.completed:
@@ -184,7 +187,9 @@ class _PagedSliverBuilderState<PageKeyType, ItemType>
                     itemList!,
                   ),
                   _itemCount,
-                  _noMoreItemsIndicatorBuilder,
+                  disabled
+                      ? (context) => const SizedBox()
+                      : _noMoreItemsIndicatorBuilder,
                 );
                 break;
               case PagingStatus.loadingFirstPage:

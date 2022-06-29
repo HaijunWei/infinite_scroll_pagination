@@ -51,7 +51,7 @@ class AppendedSliverChildBuilderDelegate extends SliverChildBuilderDelegate {
           },
           childCount: math.max(
             0,
-            childCount * 2 - (appendixBuilder != null ? 0 : 1),
+            childCount * 2 - 1,
           ),
           appendixBuilder: appendixBuilder,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
